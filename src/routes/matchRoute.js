@@ -14,6 +14,11 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-router.post("/match", upload.single("resume"), matchController.matchResume);
+// Accept both resume PDF and optional JD PDF
+router.post(
+  "/match",
+  upload.fields([{ name: "resume", maxCount: 1 }, { name: "jdFile", maxCount: 1 }]),
+  matchController.matchResume
+);
 
 module.exports = router;

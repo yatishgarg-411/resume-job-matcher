@@ -15,8 +15,9 @@ async function matchResume(req, res) {
   console.log("========================================");
   
   try {
-    const resumeFile = req.file;
-    const jdText = req.body.jdText;
+    const resumeFile  = req.files?.resume?.[0];
+    const jdFileUpload = req.files?.jdFile?.[0];
+    let   jdText = req.body.jdText || "";
     
     // Validation: Check if resume file is uploaded
     if (!resumeFile) {
@@ -28,34 +29,48 @@ async function matchResume(req, res) {
       });
     }
     
-    // Validation: Check if JD text is provided
-    if (!jdText || jdText.trim() === "") {
-      console.log("[matchControllers.js] ERROR: No JD text provided");
+    // Validation: JD must come from at least one source
+    if ((!jdText || jdText.trim() === "") && !jdFileUpload) {
+      console.log("[matchControllers.js] ERROR: No JD provided");
       return res.status(400).json({
         success: false,
         error: "Job description required",
-        message: "Please provide job description text"
+        message: "Please provide a job description (text or PDF)"
       });
     }
     
     console.log("[matchControllers.js] Resume file:", resumeFile.originalname);
-    console.log("[matchControllers.js] JD text length:", jdText.length, "chars");
+    if (jdFileUpload) console.log("[matchControllers.js] JD file:", jdFileUpload.originalname);
+    if (jdText)        console.log("[matchControllers.js] JD text length:", jdText.length, "chars");
     
-    // Step 1: Extract text from PDF
+    // Step 1: Extract text from resume PDF
     console.log("\n[STEP 1] Extracting text from resume PDF...");
     let resumeText;
     try {
       resumeText = await extractText(resumeFile.path);
-      if (!resumeText || resumeText.trim() === "") {
-        throw new Error("PDF text extraction returned empty content");
-      }
+      if (!resumeText || resumeText.trim() === "") throw new Error("Empty content");
     } catch (pdfError) {
-      console.error("[matchControllers.js] PDF parsing error:", pdfError.message);
+      console.error("[matchControllers.js] Resume PDF error:", pdfError.message);
       return res.status(400).json({
         success: false,
         error: "PDF parsing failed",
-        message: "Could not extract text from the uploaded PDF. Please ensure it's a valid PDF file."
+        message: "Could not extract text from the resume PDF."
       });
+    }
+
+    // Step 1b: Extract text from JD PDF (if provided)
+    if (jdFileUpload && !jdText.trim()) {
+      console.log("[STEP 1b] Extracting text from JD PDF...");
+      try {
+        jdText = await extractText(jdFileUpload.path);
+      } catch (jdErr) {
+        console.error("[matchControllers.js] JD PDF error:", jdErr.message);
+        return res.status(400).json({
+          success: false,
+          error: "JD PDF parsing failed",
+          message: "Could not extract text from the JD PDF."
+        });
+      }
     }
     
     // Step 2: Parse resume

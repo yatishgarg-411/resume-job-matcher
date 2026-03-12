@@ -33,7 +33,7 @@ const skillAliases = {
   "angular": "angular", "angularjs": "angular", "angular.js": "angular", "angular js": "angular",
   "vue": "vue", "vuejs": "vue", "vue.js": "vue", "vue js": "vue",
   "nuxt": "nuxt", "nuxtjs": "nuxt", "nuxt.js": "nuxt",
-  "next.js": "next.js", "nextjs": "next.js", "next js": "next.js", "next": "next.js",
+  "next.js": "next.js", "nextjs": "next.js", "next js": "next.js",
   "svelte": "svelte", "sveltekit": "svelte",
   "jquery": "jquery",
   "bootstrap": "bootstrap", "bootstrap 5": "bootstrap",
@@ -89,6 +89,19 @@ const skillAliases = {
   "opencv": "opencv", "cv2": "opencv", "computer vision": "opencv",
   "nlp": "nlp", "natural language processing": "nlp", "text mining": "nlp",
   "data science": "data science", "data analysis": "data science", "data analytics": "data science",
+
+  // ========== BI / Data Tools ==========
+  "excel": "excel", "ms excel": "excel", "microsoft excel": "excel",
+  "google sheets": "google sheets", "google spreadsheets": "google sheets",
+  "tableau": "tableau",
+  "power bi": "power bi", "powerbi": "power bi",
+  "qlik sense": "qlik sense", "qliksense": "qlik sense", "qlik": "qlik sense",
+  "metabase": "metabase",
+  "looker": "looker",
+  "data visualization": "data visualization", "data visualisation": "data visualization",
+  "statistical modeling": "statistical modeling", "statistical modelling": "statistical modeling",
+  "presto": "presto",
+  "hive": "hive", "apache hive": "hive",
 
   // ========== APIs & Protocols ==========
   "rest api": "rest api", "rest": "rest api", "restful": "rest api", "restful api": "rest api",
