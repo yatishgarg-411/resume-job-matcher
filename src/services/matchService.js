@@ -17,7 +17,10 @@ function matchSkills(resumeSkills, jdSkills){
     skill => skill.presentInResume
   ).length;
 
-  const score = (matchedSkills / jdSkills.length) * 100;
+  // Handle division by zero
+  const score = jdSkills.length > 0 
+    ? (matchedSkills / jdSkills.length) * 100 
+    : 0;
 
   return {
     skillsAnalysis,

@@ -3,7 +3,7 @@ const router = express.Router();
 
 const multer = require("multer");
 
-const matchController = require("../controllers/matchController");
+const matchController = require("../controllers/matchControllers");
 
 const storage = multer.diskStorage({
 

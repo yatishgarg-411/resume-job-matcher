@@ -1,38 +1,49 @@
-// Extract years of experience from text
-function extractExperience(text) {
+const skills = require("../utils/skillList");
+const { extractExperience } = require("../utils/regexUtils");
 
-  if(!text) return null;
+function extractSkills(text){
 
-  const regex = /(\d+)\+?\s*(years?|yrs?|yr)/i;
+  if(!text) return [];
 
-  const match = text.match(regex);
+  const lowerText = text.toLowerCase();
 
-  if(match){
-    return parseInt(match[1]);
-  }
+  const foundSkills = [];
 
-  return null;
+  skills.forEach(skill => {
+    // Use word boundary regex to avoid false positives
+    // e.g., "c" should not match "react", "go" should not match "google"
+    const escapedSkill = skill.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`\\b${escapedSkill}\\b`, 'i');
+    
+    if(regex.test(lowerText)){
+      foundSkills.push(skill);
+    }
+  });
+
+  return [...new Set(foundSkills)];
 }
 
 
-// Extract salary from Job Description
-function extractSalary(text){
+function parseResume(text){
 
-  if(!text) return null;
-
-  const regex = /(₹?\s?\d[\d,]*\s*(LPA|per annum|USD|INR))/i;
-
-  const match = text.match(regex);
-
-  if(match){
-    return match[0];
+  if(!text){
+    return {
+      resumeSkills: [],
+      experience: null
+    };
   }
 
-  return null;
+  const resumeSkills = extractSkills(text);
+
+  const experience = extractExperience(text);
+
+  return {
+    resumeSkills,
+    experience
+  };
 }
 
 
 module.exports = {
-  extractExperience,
-  extractSalary
+  parseResume
 };

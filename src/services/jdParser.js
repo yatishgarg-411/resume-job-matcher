@@ -10,11 +10,14 @@ function extractSkills(text){
   const foundSkills = [];
 
   skills.forEach(skill => {
-
-    if(lowerText.includes(skill)){
+    // Use word boundary regex to avoid false positives
+    // e.g., "c" should not match "react", "go" should not match "google"
+    const escapedSkill = skill.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`\\b${escapedSkill}\\b`, 'i');
+    
+    if(regex.test(lowerText)){
       foundSkills.push(skill);
     }
-
   });
 
   return [...new Set(foundSkills)];
