@@ -1,4 +1,8 @@
+const express = require("express");
+const router = express.Router();
 const multer = require("multer");
+
+const matchController = require("../controllers/matchController");
 
 const storage = multer.diskStorage({
  destination: function(req,file,cb){
@@ -10,3 +14,7 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({storage});
+
+router.post("/match", upload.single("resume"), matchController.matchResume);
+
+module.exports = router;
